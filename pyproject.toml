@@ -11,16 +11,33 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "<3.15,>=3.10"
+
+# Web framework for REST API endpoints
 fastapi = "^0.121.3"
+# ASGI server for running FastAPI with async support
 uvicorn = {extras = ["standard"], version = "^0.38.0"}
+
+# gRPC framework for high-performance inference requests
 grpcio = "^1.76.0"
+# Tools for generating Python code from .proto files
 grpcio-tools = "^1.76.0"
+
+# Async Kafka client for event streaming
 aiokafka = "^0.12.0"
+
+# PyTorch deep learning framework with CUDA support
 torch = {version = "^2.9.0", source = "torch_cuda"}
+# Computer vision library for PyTorch
 torchvision = {version = "^0.24.0", source = "torch_cuda"}
+
+# YAML parser for model registry configuration
 pyyaml = "^6.0.3"
+
+# Metrics collection for Prometheus monitoring
 prometheus-client = "^0.23.1"
+# Structured logging for production environments
 structlog = "^25.5.0"
+# Load environment variables from .env files
 python-dotenv = "^1.2.1"
 
 [[tool.poetry.source]]
@@ -29,18 +46,33 @@ url = "https://download.pytorch.org/whl/cu128"
 priority = "explicit"
 
 [tool.poetry.group.dev.dependencies]
+# Testing framework with fixture support
 pytest = "^8.2.0"
+# Async test support for pytest
 pytest-asyncio = "^1.3.0"
+# Code coverage reporting for pytest
 pytest-cov = "^7.0.0"
+# gRPC testing utilities
 pytest-grpc = "^0.8.0"
+# Mocking library for pytest
 pytest-mock = "^3.15.1"
+# HTTP client for testing FastAPI endpoints
 httpx = "^0.28.1"
+
+# Code formatter for consistent style
 black = "^25.11.0"
+# Import statement sorter
 isort = "^7.0.0"
+# Python linter for code quality checks
 pylint = "^4.0.3"
+# Static type checker
 mypy = "^1.18.2"
+# Git hooks manager for automated checks
 pre-commit = "^4.4.0"
+
+# Pylint plugin for pytest compatibility
 pylint-pytest = "^1.1.8"
+# Pylint plugin for Pydantic model validation
 pylint-pydantic = "^0.4.1"
 
 [build-system]
