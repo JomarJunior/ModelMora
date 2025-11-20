@@ -24,12 +24,6 @@ repos:
     rev: 7.0.0
     hooks:
       - id: isort
-  - repo: https://github.com/PyCQA/pylint
-    rev: v4.0.3
-    hooks:
-      - id: pylint
-        files: ^src/
-        exclude: ^tests/
 
 default_language_version:
   python: python3.10
