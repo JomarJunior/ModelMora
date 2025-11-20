@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
-async def lifespan(application: FastAPI):
+async def lifespan(application: FastAPI):  # pylint: disable=unused-argument
     # Start gRPC server when FastAPI starts.
     logger.info("Starting gRPC server...")
     # asyncio.create_task(start_grpc_server())
