@@ -170,7 +170,7 @@ async def metrics() -> dict:
 
 ### Directory Structure
 
-```
+```bash
 modemora/
 ├── Dockerfile
 ├── pyproject.toml
