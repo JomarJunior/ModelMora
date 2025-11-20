@@ -126,6 +126,13 @@ addopts = [
     "--cov-report=term-missing:skip-covered",
     "--cov-fail-under=80"
 ]
+
+[tool.coverage.run]
+omit = [
+    "__init__.py",
+    "main.py",
+]
+
 markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
     "integration: marks tests as integration tests",
