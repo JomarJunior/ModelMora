@@ -1,0 +1,97 @@
+[tool.poetry]
+name = "ModelMora"
+version = "0.1.0"
+description = "Neural network model management and inference serving microservice for MiraVeja"
+authors = ["Jomar Júnior de Souza Pereira <jomarjunior@poli.ufrj.br>"]
+readme = "README.md"
+license = "MIT"
+packages = [
+    { include = "ModelMora", from = "src" }
+]
+
+[tool.poetry.dependencies]
+python = "<3.15,>=3.10"
+fastapi = "^0.121.3"
+uvicorn = {extras = ["standard"], version = "^0.38.0"}
+grpcio = "^1.76.0"
+grpcio-tools = "^1.76.0"
+aiokafka = "^0.12.0"
+torch = {version = "^2.9.0", source = "torch_cuda"}
+torchvision = {version = "^0.24.0", source = "torch_cuda"}
+pyyaml = "^6.0.3"
+prometheus-client = "^0.23.1"
+structlog = "^25.5.0"
+python-dotenv = "^1.2.1"
+
+[[tool.poetry.source]]
+name = "torch_cuda"
+url = "https://download.pytorch.org/whl/cu128"
+priority = "explicit"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.2.0"
+pytest-asyncio = "^1.3.0"
+pytest-cov = "^7.0.0"
+pytest-grpc = "^0.8.0"
+pytest-mock = "^3.15.1"
+httpx = "^0.28.1"
+black = "^25.11.0"
+isort = "^7.0.0"
+pylint = "^4.0.3"
+mypy = "^1.18.2"
+pre-commit = "^4.4.0"
+pylint-pytest = "^1.1.8"
+pylint-pydantic = "^0.4.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
+target-version = ["py313"]
+
+[tool.isort]
+profile = "black"
+line_length = 120
+known_first_party = ["ModelMora"]
+
+[tool.pylint.master]
+ignore = ["tests", "venv", ".venv", "build", "dist"]
+jobs = 0
+module-naming-style = "snake_case"
+const-naming-style = "UPPER_CASE"
+class-naming-style = "PascalCase"
+function-naming-style = "snake_case"
+method-naming-style = "snake_case"
+attr-naming-style = "snake_case"
+argument-naming-style = "snake_case"
+variable-naming-style = "snake_case"
+load-plugins = ["pylint_pydantic", "pylint_pytest"]
+
+[tool.pylint.messages_control]
+disable = [
+    "C0114", "C0115", "C0116", "R0917", "W0622",
+    "R0903", "W0718", "R0801", "E1136", "R0913"
+]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+asyncio_mode = "auto"
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "--cov=src/ModelMora",
+    "--cov-report=html",
+    "--cov-report=term-missing:skip-covered",
+    "--cov-fail-under=80"
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "gpu: marks tests that require GPU"
+]
