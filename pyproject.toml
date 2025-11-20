@@ -100,6 +100,10 @@ attr-naming-style = "snake_case"
 argument-naming-style = "snake_case"
 variable-naming-style = "snake_case"
 load-plugins = ["pylint_pydantic", "pylint_pytest"]
+good-names = ["ModelMora"]
+
+[tool.pylint.format]
+max-line-length = 120
 
 [tool.pylint.messages_control]
 disable = [
