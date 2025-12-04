@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 import pytest
 
-from ModelMora.configuration.gpu_config import GPUConfig
+from modelmora.configuration.gpu_config import GPUConfig
 
 
 class TestGPUConfig:

@@ -6,7 +6,7 @@ authors = ["Jomar Júnior de Souza Pereira <jomarjunior@poli.ufrj.br>"]
 readme = "README.md"
 license = "MIT"
 packages = [
-    { include = "ModelMora", from = "src" }
+    { include = "modelmora", from = "src" }
 ]
 
 [tool.poetry.dependencies]
@@ -26,9 +26,9 @@ grpcio-tools = "^1.76.0"
 aiokafka = "^0.12.0"
 
 # PyTorch deep learning framework with CUDA support
-torch = "^2.9.0"
+torch = {version = "^2.9.0", source = "torch_cuda_13"}
 # Computer vision library for PyTorch
-torchvision = "^0.24.0"
+torchvision = {version = "^0.24.0", source = "torch_cuda_13"}
 
 # YAML parser for model registry configuration
 pyyaml = "^6.0.3"
@@ -39,6 +39,20 @@ prometheus-client = "^0.23.1"
 structlog = "^25.5.0"
 # Load environment variables from .env files
 python-dotenv = "^1.2.1"
+# Dependency injection framework
+miraveja-di = "^0.1.0"
+miraveja-log = {extras = ["fastapi"], version = "^0.1.0"}
+miraveja-authentication = "^0.1"
+miraveja-protos = "^0.1.2"
+transformers = "^4.57.3"
+open-clip-torch = "^3.2.0"
+psutil = "^7.1.3"
+typing-extensions = "^4.15.0"
+
+[[tool.poetry.source]]
+name = "torch_cuda_13"
+url = "https://download.pytorch.org/whl/cu130"
+priority = "explicit"
 
 [tool.poetry.group.dev.dependencies]
 # Testing framework with fixture support
@@ -69,6 +83,7 @@ pre-commit = "^4.4.0"
 pylint-pytest = "^1.1.8"
 # Pylint plugin for Pydantic model validation
 pylint-pydantic = "^0.4.1"
+protolint-bin = "^0.56.4"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -95,7 +110,7 @@ attr-naming-style = "snake_case"
 argument-naming-style = "snake_case"
 variable-naming-style = "snake_case"
 load-plugins = ["pylint_pydantic", "pylint_pytest"]
-good-names = ["ModelMora"]
+good-names = ["memory_mB"]
 
 [tool.pylint.format]
 max-line-length = 120

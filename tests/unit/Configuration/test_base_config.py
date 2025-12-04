@@ -8,7 +8,7 @@ import pytest
 import yaml
 from pydantic import ValidationError
 
-from ModelMora.configuration.base_config import BaseConfig
+from modelmora.configuration.base_config import BaseConfig
 
 
 class TestBaseConfig:

@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 import pytest
 
-from ModelMora.configuration.connection_config import ConnectionConfig
+from modelmora.configuration.connection_config import ConnectionConfig
 
 
 class TestConnectionConfig:

@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 import pytest
 
-from ModelMora.configuration.performance_config import PerformanceConfig
+from modelmora.configuration.performance_config import PerformanceConfig
 
 
 class TestPerformanceConfig:

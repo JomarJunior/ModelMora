@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 import pytest
 
-from ModelMora.configuration.model_management_config import ModelManagementConfig
+from modelmora.configuration.model_management_config import ModelManagementConfig
 
 
 class TestModelManagementConfig:

@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 import pytest
 
-from ModelMora.configuration.kafka_config import KafkaConfig
+from modelmora.configuration.kafka_config import KafkaConfig
 
 
 class TestKafkaConfig:

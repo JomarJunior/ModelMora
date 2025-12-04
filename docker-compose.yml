@@ -4,14 +4,34 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: modelmora
-    env_file:
-      - .env
     ports:
-      - "8080:8080" # Expose port 8080 for FastAPI
-      - "50051:50051" # Expose port 50051 for gRPC
+      - "50052:${MODELMORACONNECTION_HTTP_PORT}" # Expose port 50052 for FastAPI
+      - "50051:${MODELMORACONNECTION_GRPC_PORT}" # Expose port 50051 for gRPC
     volumes:
       - ./src:/app/src
+      - ./poetry.lock:/app/poetry.lock
+      - ./pyproject.toml:/app/pyproject.toml
+      - ./logs:/app/logs
       - ./config:/app/config
+      - ./.env:/app/.env
       - ${MODELS_DIR}:/models
     restart: unless-stopped
-    command: poetry run python -m ModelMora.main
+    command: python3.10 -m ModelMora.main
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:${MODELMORACONNECTION_HTTP_PORT}/modelmora/api/v1/health || exit 1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - miraveja_miraveja
+
+networks:
+  miraveja_miraveja:
+    external: true

@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from ModelMora.configuration.app_config import AppConfig
+from modelmora.configuration.app_config import AppConfig
 
 
 class TestAppConfig:

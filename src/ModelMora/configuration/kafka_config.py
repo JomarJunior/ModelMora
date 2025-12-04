@@ -2,7 +2,7 @@ from typing import ClassVar, List
 
 from pydantic import Field
 
-from ModelMora.configuration.base_config import BaseConfig
+from modelmora.configuration.base_config import BaseConfig
 
 
 class KafkaConfig(BaseConfig):

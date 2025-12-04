@@ -68,3 +68,7 @@ coverage.xml
 # OS
 .DS_Store
 Thumbs.db
+
+# logs
+logs/
+*.log

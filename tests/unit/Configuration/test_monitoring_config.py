@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 import pytest
 
-from ModelMora.configuration.monitoring_config import MonitoringConfig
+from modelmora.configuration.monitoring_config import MonitoringConfig
 
 
 class TestMonitoringConfig:

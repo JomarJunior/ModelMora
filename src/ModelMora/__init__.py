@@ -5,3 +5,7 @@ This package provides functionalities to manage and serve neural network models 
 """
 
 __version__ = "0.1.0"
+
+from .dependencies import ModelMoraDependencies
+
+__all__ = ["ModelMoraDependencies"]

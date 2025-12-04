@@ -2,7 +2,7 @@ from typing import ClassVar
 
 from pydantic import Field
 
-from ModelMora.configuration.base_config import BaseConfig
+from modelmora.configuration.base_config import BaseConfig
 
 
 class GPUConfig(BaseConfig):
