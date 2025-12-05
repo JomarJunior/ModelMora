@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package modelmora;
+
+// Inference service definition
+service InferenceService {
+  // Server-side streaming RPC for large payloads
+  rpc StreamInference(InferenceRequest) returns (stream InferenceResponse);
+}
+
+// Request message for inference
+message InferenceRequest {
+  string model_id = 1;
+  string prompt = 2;
+  int32 batch_size = 3;
+}
+
+// Response message for streaming inference results
+message InferenceResponse {
+  string request_id = 1;
+  int32 chunk_index = 2;
+  int32 total_chunks = 3;
+  bytes data = 4;
+  map<string, string> metadata = 5;
+}
