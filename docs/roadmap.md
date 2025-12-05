@@ -95,73 +95,251 @@
 
 ### 1.1 Project Foundation (Week 1)
 
-- [ ] Repository setup with Poetry
-- [ ] Project structure scaffolding
-- [ ] CI/CD pipeline (GitHub Actions)
-- [ ] Code quality tools (ruff, black, mypy)
-- [ ] Testing framework (pytest)
-- [ ] Documentation site (MkDocs)
+- [x] **Repository setup with Poetry**
+  - Create `pyproject.toml` with metadata, dependencies, dev dependencies, scripts
+  - Initialize Poetry virtualenv and generate `poetry.lock`
+  - Add `README.md`, license file, `.gitignore`
+  - Configure `poetry run` scripts for common tasks (test, lint, serve)
+  - **Acceptance**: `poetry install` reproduces environment; `poetry run pytest` executes
+
+- [X] **Project structure scaffolding**
+  - Create directory layout: `src/modelmora/`, `tests/unit/`, `tests/integration/`, `docs/`, `config/`, `examples/`
+  - Add `__init__.py` to package and submodules (`registry`, `lifecycle`, `inference`, `observability`, `presentation`, `worker`, `shared`)
+  - Configure `src/` layout in `pyproject.toml` for proper imports
+  - **Acceptance**: `from modelmora.{...} import Registry` works; structure matches conventions
+
+- [ ] **CI/CD pipeline (GitHub Actions)**
+  - Create `.github/workflows/ci.yml` (lint + test on PR/push)
+  - Create `.github/workflows/docker-build.yml` (build and push on release)
+  - Add dependency caching for Poetry in workflows
+  - Optional: `deploy-docs.yml` for MkDocs to GitHub Pages
+  - **Acceptance**: PR checks run and report status; Docker build completes successfully
+
+- [ ] **Code quality tools (ruff, black, mypy)**
+  - Configure `black` in `pyproject.toml` (line length, target version)
+  - Configure `ruff` rules (select/ignore, extend-select) in `pyproject.toml`
+  - Configure `mypy` strictness (disallow-untyped-defs, plugins) in `pyproject.toml` or `mypy.ini`
+  - Add `.pre-commit-config.yaml` with black, ruff, mypy hooks
+  - Add lint job to CI workflow
+  - **Acceptance**: `pre-commit run --all-files` passes; CI enforces checks
+
+- [ ] **Testing framework (pytest)**
+  - Add `pytest.ini` or `[tool.pytest.ini_options]` in `pyproject.toml`
+  - Create `conftest.py` with common fixtures (temp dirs, mock models, DB fixtures)
+  - Add sample unit tests for core modules
+  - Configure coverage measurement (`pytest-cov`) with >70% threshold
+  - **Acceptance**: `pytest` runs locally and in CI; coverage enforced in CI
+
+- [ ] **Documentation site (MkDocs)**
+  - Create `mkdocs.yml` with site metadata and navigation structure
+  - Bootstrap initial docs pages: `getting-started.md`, `architecture.md`, `api-reference.md`, `deployment.md`
+  - Add GitHub Pages deployment workflow (or manual `mkdocs gh-deploy`)
+  - **Acceptance**: `mkdocs serve` renders site locally; docs deployed on push to main
 
 ### 1.2 Model Registry (Week 2)
 
-- [ ] **Data Layer**
-  - SQLite database schema
-  - Model metadata CRUD operations
-  - Version tracking logic
+- [ ] **Data Layer - SQLite database schema**
+  - Design `models` table: id, name, version, path/url, config (JSON), created_by, created_at, state
+  - Create SQL schema file or migration script (simple SQL or `alembic` for versioning)
+  - Add indexes for common queries (name, version, state)
+  - **Acceptance**: Schema created; DB operations persist and retrieve model records
 
-- [ ] **Registry Service**
-  - Model registration API
-  - Model discovery/listing
-  - Basic validation
+- [ ] **Data Layer - Model metadata CRUD operations**
+  - Implement `ModelRepository` class with methods: `create()`, `get()`, `update()`, `delete()`, `list()`
+  - Add transactional safety and connection pooling
+  - Write unit tests for repository using in-memory SQLite
+  - **Acceptance**: Repository tested in isolation; supports filtering by name/version/state
 
-- [ ] **Configuration Parser**
-  - YAML model definitions
-  - Environment variable support
+- [ ] **Data Layer - Version tracking logic**
+  - Add DB columns and logic for version comparisons (`is_latest` flag or ordering by `created_at`)
+  - Implement API to promote versions or deprecate older ones
+  - Add query methods: `get_latest()`, `get_by_version()`
+  - **Acceptance**: Registry returns correct version based on query (explicit version vs latest)
+
+- [ ] **Registry Service - Model registration API**
+  - Implement POST `/models` endpoint to register models (local path or remote URL)
+  - Validate input and persist metadata using `ModelRepository`
+  - Return 201 with created model metadata or 400 with validation errors
+  - **Acceptance**: POST returns persisted record; validation errors return helpful messages
+
+- [ ] **Registry Service - Model discovery/listing**
+  - Implement GET `/models` endpoint with pagination and filters (tag, task, device)
+  - Implement GET `/models/{name}` to fetch specific model metadata
+  - Support query parameters for filtering and sorting
+  - **Acceptance**: Clients can list and fetch model metadata; basic queries work
+
+- [ ] **Registry Service - Basic validation**
+  - Add Pydantic validators for required metadata fields
+  - Optional: Light probe to verify path/URL accessibility
+  - Return structured error responses for invalid registrations
+  - **Acceptance**: Invalid registrations rejected with clear, actionable error messages
+
+- [ ] **Configuration Parser - YAML model definitions**
+  - Implement parser to read `config/models/*.yml` into Pydantic model objects
+  - Define example YAML schema with fields: name, version, source, task, device, config
+  - Add CLI command or boot-time loader to populate registry from YAML
+  - **Acceptance**: Parser converts YAML to model metadata; batch registration works
+
+- [ ] **Configuration Parser - Environment variable support**
+  - Support `${ENV_VAR}` syntax for variable interpolation in YAML
+  - Add fallback/default value syntax (e.g., `${VAR:-default}`)
+  - Raise clear errors for missing required environment variables
+  - **Acceptance**: Configs load with variables replaced; missing vars produce helpful errors
 
 ### 1.3 Basic Inference Engine (Week 3-4)
 
-- [ ] **Model Loader**
-  - HuggingFace integration
-  - Local file support
-  - Basic caching mechanism
+- [ ] **Model Loader - HuggingFace integration**
+  - Implement `ModelLoader` interface with `load(model_meta)` method
+  - Support HuggingFace `transformers` and `sentence-transformers` using `from_pretrained()`
+  - Configure `cache_dir` for downloaded models
+  - Return `ModelHandle` exposing `.infer()` or `.encode()` based on model type
+  - Add mock loader for unit tests
+  - **Acceptance**: Loader instantiates small model in dev; logs memory and timing metrics
 
-- [ ] **Worker Process**
-  - Single model worker implementation
-  - Process spawning/cleanup
-  - Basic inference execution
+- [ ] **Model Loader - Local file support**
+  - Support `file://` paths or direct local directory paths
+  - Verify file structure and provide informative errors for missing files
+  - Add tests for loading from local directories
+  - **Acceptance**: Local models load successfully; test coverage for file validation
 
-- [ ] **Memory Management**
-  - Process isolation verification
-  - GPU memory cleanup
-  - Resource monitoring
+- [ ] **Model Loader - Basic caching mechanism**
+  - Implement in-process cache keyed by model id/version with TTL or LRU policy
+  - Avoid redundant loads when model already in memory
+  - Expose metrics on cache hits/misses
+  - **Acceptance**: Repeated load requests hit cache; metrics logged or exposed
+
+- [ ] **Worker Process - Single model worker implementation**
+  - Implement worker process entrypoint accepting control messages (load/unload/health)
+  - Accept inference requests over IPC (`multiprocessing.Connection`, HTTP, or socket)
+  - Implement message protocol for request/response serialization
+  - **Acceptance**: Worker loads model and serves requests; main process controls lifecycle
+
+- [ ] **Worker Process - Process spawning/cleanup**
+  - Implement supervisor logic to spawn worker subprocess with `multiprocessing.Process`
+  - Monitor worker heartbeat and collect exit codes
+  - Implement graceful shutdown with timeout and forced kill for stuck processes
+  - Add tests for clean shutdown and forced termination scenarios
+  - **Acceptance**: Worker termination frees memory (validated by POC); supervisor handles failures
+
+- [ ] **Worker Process - Basic inference execution**
+  - Implement worker API method: `infer(payload)` returning serializable outputs
+  - Add request queueing within worker and basic timeout handling
+  - Support synchronous inference for MVP
+  - **Acceptance**: `/infer/{model_name}` calls worker and returns results within expected latency
+
+- [ ] **Memory Management - Process isolation verification**
+  - Add integration tests measuring RSS before/after load/unload with `psutil`
+  - Verify memory reclaimed to baseline after worker termination
+  - Document test results and compare against POC benchmarks
+  - **Acceptance**: Memory reclamation meets POC targets (subprocess ~0MB leak vs GC ~500MB leak)
+
+- [ ] **Memory Management - GPU memory cleanup**
+  - Add hooks to clear `torch.cuda` state before worker exit
+  - Force process termination to release GPU contexts
+  - Optional: Add `nvidia-smi` checks in integration tests for dev verification
+  - **Acceptance**: GPU memory freed after worker exit (observed in integration test or manual run)
+
+- [ ] **Memory Management - Resource monitoring**
+  - Implement lightweight monitor using `psutil` for CPU/RAM and `pynvml` for GPU
+  - Expose metrics via Prometheus client or structured logs
+  - Add alerts/thresholds for memory pressure
+  - **Acceptance**: Supervisor logs per-worker resource usage; alerts trigger on threshold breach
 
 ### 1.4 API Layer (Week 5)
 
-- [ ] **REST API (FastAPI)**
-  - `/health` endpoint
-  - `/models` - list available models
-  - `/infer/{model_name}` - synchronous inference
+- [ ] **REST API (FastAPI) - `/health` endpoint**
+  - Implement `/health` returning app status, DB connectivity, worker status
+  - Add optional `/ready` for Kubernetes-style readiness checks
+  - Ensure health checks are fast (<50ms) and safe (no side effects)
+  - **Acceptance**: Health endpoints return correct status; suitable for liveness/readiness probes
 
-- [ ] **Request Validation**
-  - Pydantic models for inputs
-  - Error handling
-  - Response serialization
+- [ ] **REST API (FastAPI) - `/models` - list available models**
+  - Implement GET `/models` returning paginated list with optional filters
+  - Implement GET `/models/{name}` returning specific model metadata
+  - Support query parameters: `task`, `tag`, `device`, `page`, `limit`
+  - **Acceptance**: Endpoints documented in OpenAPI; tests verify JSON schema
+
+- [ ] **REST API (FastAPI) - `/infer/{model_name}` - synchronous inference**
+  - Implement POST `/infer/{model_name}` accepting input payload
+  - Forward request to appropriate worker (or load if not cached)
+  - Return inference output with metadata (timing, model version)
+  - Handle errors: model not found (404), timeout (504), internal error (500)
+  - **Acceptance**: Endpoint returns inference JSON; appropriate HTTP codes for errors
+
+- [ ] **Request Validation - Pydantic models for inputs**
+  - Define Pydantic schemas for common request types: `TextRequest`, `EmbeddingRequest`, `ImageRequest`
+  - Define response schemas with fields: `result`, `metadata`, `timing`
+  - Add validators for input constraints (max length, format checks)
+  - **Acceptance**: Invalid payloads return 422 with detailed validation errors
+
+- [ ] **Request Validation - Error handling**
+  - Implement centralized exception handlers for validation, not-found, timeout, internal errors
+  - Map exceptions to appropriate HTTP status codes
+  - Return structured JSON error bodies: `{"error": "...", "detail": "...", "code": "..."}`
+  - **Acceptance**: Clients receive consistent, actionable error messages
+
+- [ ] **Request Validation - Response serialization**
+  - Implement serializers for numeric arrays, base64-encoded images, large payloads
+  - Add API version field or header to responses
+  - Ensure all responses are JSON-safe and documented in OpenAPI
+  - **Acceptance**: API outputs stable, versioned, and match OpenAPI spec
 
 ### 1.5 MVP Testing & Documentation (Week 6)
 
-- [ ] Unit tests (>70% coverage)
-- [ ] Integration tests for key workflows
-- [ ] Basic deployment guide
-- [ ] API documentation
-- [ ] Example usage scripts
+- [ ] **Unit tests (>70% coverage)**
+  - Write unit tests for registry, loader (with mocks), worker supervisor, API endpoints
+  - Use `TestClient` from FastAPI for endpoint tests
+  - Add tests for utility modules and helper functions
+  - Configure `pytest-cov` with coverage threshold enforcement in CI
+  - **Acceptance**: Coverage >70%; failing tests block CI build
+
+- [ ] **Integration tests for key workflows**
+  - Test end-to-end flows: register model → load → infer → unload
+  - Use local SQLite and spawn real worker process with small/mock model
+  - Assert result correctness and resource cleanup (memory, processes)
+  - Run integration tests in separate CI job (slower tests)
+  - **Acceptance**: Integration tests pass in CI on merge to main
+
+- [ ] **Basic deployment guide**
+  - Write `docs/deployment.md` with local setup and Docker instructions
+  - Document `docker build` and `docker-compose` examples
+  - List required environment variables and resource recommendations
+  - Add troubleshooting section for common issues
+  - **Acceptance**: Following guide results in running single-node instance
+
+- [ ] **API documentation**
+  - Leverage FastAPI automatic OpenAPI docs at `/docs` and `/redoc`
+  - Add MkDocs page summarizing API use cases with examples
+  - Include curl and Python client examples for each endpoint
+  - Document request/response schemas and error codes
+  - **Acceptance**: Docs contain runnable examples for `/models` and `/infer`
+
+- [ ] **Example usage scripts**
+  - Create `examples/register_and_infer.py` demonstrating full workflow
+  - Create `examples/local_infer.py` for local testing
+  - Add `examples/README.md` with setup instructions and expected outputs
+  - Ensure examples excluded from linting (already configured in `.vscode/settings.json`)
+  - **Acceptance**: Scripts run with documented commands; produce expected outputs
 
 **MVP Deliverable**: Single-node ModelMora that can:
 
-- Register models from config file
-- Load model on first request
-- Execute inference synchronously
-- Return results via REST API
-- Run in Docker container
+- **Register models from config file**: YAML import or POST to `/models` populates registry
+- **Load model on first request**: Lazy loading with 2s load time (POC validated)
+- **Execute inference synchronously**: POST to `/infer/{model_name}` returns results
+- **Return results via REST API**: JSON responses with OpenAPI documentation
+- **Run in Docker container**: `docker-compose up` starts service with minimal configuration
+
+**MVP Acceptance Checklist**:
+
+- ✅ YAML config imports models into SQLite registry
+- ✅ First inference request triggers model load in subprocess worker
+- ✅ Subsequent requests reuse loaded model (cache hit)
+- ✅ Inference completes with <100ms overhead (queue: <1μs, validated by POC)
+- ✅ Worker termination reclaims memory (subprocess: ~0MB leak, validated by POC)
+- ✅ Docker image builds and runs with documented environment variables
+- ✅ API endpoints documented in OpenAPI and tested
+- ✅ Unit test coverage >70%; integration tests pass
+- ✅ Deployment guide produces working instance
 
 ---
 
