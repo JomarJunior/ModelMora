@@ -2610,6 +2610,23 @@ files = [
 ]
 
 [[package]]
+name = "protolint-bin"
+version = "0.56.4"
+description = "A pluggable linter and fixer to enforce Protocol Buffer style and conventions."
+optional = false
+python-versions = "*"
+groups = ["dev"]
+files = [
+    {file = "protolint_bin-0.56.4-py2.py3-none-macosx_10_0_arm64.whl", hash = "sha256:2b994c8dd1b638a50aaf4752041e402f85cae1905a7479a068cb26001b2e2f94"},
+    {file = "protolint_bin-0.56.4-py2.py3-none-macosx_10_0_x86_64.whl", hash = "sha256:d928b42fd04cccba96f9cb01488744e7098fa5af80f7bde9df1628da259f6bc3"},
+    {file = "protolint_bin-0.56.4-py2.py3-none-manylinux2014_aarch64.whl", hash = "sha256:1a175249a3f2bd75a785059392cfd409609ebbc3e3aa0ccab656d4ccf57e8a9b"},
+    {file = "protolint_bin-0.56.4-py2.py3-none-manylinux2014_armv7l.whl", hash = "sha256:045370058409c730dfc1c1b576241629dd48707391f37b1f74f08cb16963c9c9"},
+    {file = "protolint_bin-0.56.4-py2.py3-none-manylinux2014_x86_64.whl", hash = "sha256:9e68f2c888a7e80306b8dcee46380b1c5608f8547d85fe44c0d9a7e72f3808e1"},
+    {file = "protolint_bin-0.56.4-py2.py3-none-win_amd64.whl", hash = "sha256:93744501f468be785262c81c5da9f0f3a0a70fe46ff5fda70921210977ba91ce"},
+    {file = "protolint_bin-0.56.4-py2.py3-none-win_arm64.whl", hash = "sha256:8a1d9b517d149d79299f618307dcfe124511e1411bf01c3cf7ee0e6a09a2c03d"},
+]
+
+[[package]]
 name = "psutil"
 version = "7.1.3"
 description = "Cross-platform lib for process and system monitoring."
@@ -4640,4 +4657,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "<3.15,>=3.10"
-content-hash = "5dc77d77f19c02070d8cb08d669582e65a57734a69c7251703d8517e2fedf9b2"
+content-hash = "5aab09bffc874ac54106704999b8ed391bf1bf191b892071c25059fcf3ac3a77"
